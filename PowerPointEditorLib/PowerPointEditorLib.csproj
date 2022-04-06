@@ -10,11 +10,25 @@
 
     <PackageId>CFXYZ.PowerPointEditorLib</PackageId>
     <Version>1.0.0</Version>
-    <PackageTags>PowerPoint;Open XML SDK</PackageTags>
+    <PackageTags>PowerPoint;OpenXmlSdk</PackageTags>
     <Description>
       A library to make editing PowerPoint presentations more approachable by wrapping the Open XML SDK.
     </Description>
+    <Company>Chris Felstead</Company>
+    <PackageProjectUrl>https://github.com/cfelstead/PowerPointEditor/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/cfelstead/PowerPointEditor/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
