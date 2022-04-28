@@ -39,9 +39,31 @@ public static class BarChartExtensions
         var numRef = values.GetFirstChild<NumberReference>() ?? throw new NullReferenceException("Cannot read chart elements (numberReference)");
         var numCache = numRef.GetFirstChild<NumberingCache>() ?? throw new NullReferenceException("Cannot read chart elements (numberingCache)");
 
+
+
+        // This is all to locate the affect slide number in order to enhance the error message.
+        var sp = series.Ancestors<ChartSpace>().FirstOrDefault()?.ChartPart?.GetParentParts().Where(pp => pp.GetType() == typeof(SlidePart)).FirstOrDefault();
+        var allSlideParts = sp?.OpenXmlPackage.RootPart?.GetPartsOfType<SlidePart>();
+        int chartFoundOnSlideNumber = -1;
+        string errorEnhancement = "";
+        if (allSlideParts is not null)
+        {
+            foreach (var part in allSlideParts)
+            {
+                chartFoundOnSlideNumber++;
+                if (part == sp)
+                {
+                    errorEnhancement = $" This chart is on slide {chartFoundOnSlideNumber}.";
+                    break;
+                }
+            }
+        }
+
+
+
         int chartValuesCount = numCache.Elements<NumericPoint>().Count();
         if (chartValuesCount != newValues.Count())
-            throw new ArgumentException($"The number of values provided for the chart edit ({newValues.Count()}) does not match the number of values used in the chart ({chartValuesCount})");
+            throw new ArgumentException($"The number of values provided for the chart edit ({newValues.Count()}) does not match the number of values used in the chart ({chartValuesCount}).{errorEnhancement}");
 
         int valuePosition = -1;
         foreach (var np in numCache.Elements<NumericPoint>())
