@@ -72,3 +72,15 @@ presentation.ForSlide(4)
 ```
 
 We are editing the second pie chart on slide 4. It has 4 values and we are adjusting them to the values we have passed in.
+
+### Working with table contents
+
+```csharp
+presentation.ForSlide(5)
+            .FindTable(1)
+            .FindRow(2)
+            .FindCell(1)
+            .ReplaceCellText("Default cell text", "New cell text");
+```
+
+We are editing the first table on slide 5. We are then editing the second row and first column to replace the text "Default cell text" with "New cell text".
