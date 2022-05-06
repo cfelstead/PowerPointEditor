@@ -12,7 +12,7 @@ public class SlideSelectionTests
 
         var ppt = new PowerPointPresentation(examplePpt, true);
 
-        Assert.Equal(4, ppt.ForAllSlides().Count);
+        Assert.Equal(5, ppt.ForAllSlides().Count);
 
         ppt.Close();
     }
