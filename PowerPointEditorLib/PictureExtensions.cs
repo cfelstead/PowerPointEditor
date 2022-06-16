@@ -23,6 +23,30 @@ public static class PictureExtensions
         altTextHolder.Description = newAltText;
     }
 
+    public static void ReplaceHyperlinkWith(this Picture picture, string newUrl)
+    {
+        var nonVisualProps = picture.NonVisualPictureProperties?.GetFirstChild<NonVisualDrawingProperties>()
+            ?? throw new ArgumentException("The picture has no visual properties.");
+
+        var hyperlinkId = nonVisualProps.HyperlinkOnClick?.Id
+            ?? throw new ArgumentException("The picture has no hyperlink setup.");
+
+        SlidePart? slidePart = picture.FindParentSlidePart()
+            ?? throw new ArgumentException("The parent slide part found for the image.");
+
+
+
+
+        // Create new hyperlink relationship
+        HyperlinkRelationship newHyperlink = slidePart.AddHyperlinkRelationship(new Uri(newUrl, UriKind.Absolute), true);
+        var clickHandler = slidePart.Slide.Descendants<DocumentFormat.OpenXml.Drawing.HyperlinkType>().First(l => l.Id == hyperlinkId);
+        HyperlinkRelationship currentHyperlink = slidePart.HyperlinkRelationships.Where(r => r.Id.Equals(hyperlinkId)).First();
+
+        // Delete the old reference and replace with the new one
+        slidePart.DeleteReferenceRelationship(currentHyperlink);
+        clickHandler.Id = newHyperlink.Id;
+    }
+
     public static void ReplaceImageWith(this Picture picture, string filepath)
     {
         if (File.Exists(filepath) == false)

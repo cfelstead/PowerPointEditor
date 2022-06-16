@@ -36,6 +36,36 @@ public class PictureTests
     }
 
     [Fact]
+    public void Picture_WithHyperlinkChanged_Works()
+    {
+        string examplePpt = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                         "ppt-examples",
+                                         "test.pptx");
+        string originalAltText = "Slide 2 Image";
+        string newUrl = "http://www.futuressport.com";
+
+
+        string destructiveReplacementPpt = examplePpt.Replace("test.pptx", "test_replaceimage.pptx");
+        if (File.Exists(destructiveReplacementPpt)) File.Delete(destructiveReplacementPpt);
+        File.Copy(examplePpt, destructiveReplacementPpt);
+
+        var changablePpt = new PowerPointPresentation(destructiveReplacementPpt);
+
+        Picture picture = changablePpt.ForSlide(2).FindPictureWithAltText(originalAltText);
+        string beforeXml = picture.InnerXml;
+
+        picture.ReplaceHyperlinkWith(newUrl);
+
+        Picture picture2 = changablePpt.ForSlide(2).FindPictureWithAltText(originalAltText);
+        string afterXml = picture2.InnerXml;
+
+        Assert.NotEqual(beforeXml, afterXml);
+        
+        changablePpt.Close();
+        File.Delete(destructiveReplacementPpt);
+    }
+
+    [Fact]
     public void Picture_ReplaceAltText_Works()
     {
         string examplePpt = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,

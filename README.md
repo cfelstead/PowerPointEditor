@@ -41,6 +41,16 @@ presentation.ForSlide(2)
 
 Here we are looking in slide 2 for an image with the alternate text to ***TeamLogo***. We then replace the image with a jpg from our local disk and change the alternate text to be ***FooBar United Team Logo***.
 
+### Changing image hyperlinks
+
+```csharp
+presentation.ForSlide(2)
+            .FindPictureWithAltText("TeamLogo")
+            .ReplaceHyperlinkWith("http://www.newlink.com");
+```
+
+Here we are looking in slide 2 for an image with the alternate text to ***TeamLogo***. We then replace an existing hyperlink (there should already be one) with a new url.
+
 ### Working with bar charts
 
 ```csharp
