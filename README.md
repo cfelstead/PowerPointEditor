@@ -27,6 +27,18 @@ As you can see from the above, you can either specify to work with one single sl
 
 Inside the powerpoint you are using as a template, we are looking for the text ***{{TEAM_NAME}}*** and will replace it with ***FooBar United***.
 
+Sometime the text can be found in different sections of the powerpoint xml. This is because the styling/formatting changes mid sentence/paragraph. In these circumstances, you can automatically remove all the formatting changes (leaving it as the initial section is) and then replace the text. To do this use `IgnoringStylingWith` instead of `With`.
+
+```csharp
+presentation.ForAllSlides()
+            .ReplaceText("{{TEAM_NAME}}")
+            .IgnoringStylingWith("FooBar Unitied");
+
+presentation.ForSlide(3)
+            .ReplaceText("{{TEAM_NAME}}")
+            .IgnoringStylingWith("FooBar Unitied");
+```
+
 ### Working with images
 
 ```csharp
