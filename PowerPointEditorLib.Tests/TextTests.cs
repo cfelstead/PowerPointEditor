@@ -40,7 +40,26 @@ public class TextTests
 
         ppt.Close();
     }
-    
+
+    [Fact]
+    public void SingleSlideEdit_TextFoundWithFormattingBreakingTheParagraph_ChangeMadeWithFormattingRemoved()
+    {
+        string examplePpt = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                         "ppt-examples",
+                                         "test.pptx");
+
+        var ppt = new PowerPointPresentation(examplePpt, true);
+
+        SlidePart slidePart = ppt.ForSlide(2);
+        string beforeXml = slidePart.Slide.InnerXml;
+        slidePart.ReplaceText("{with styling to break to the paragraph}").IgnoringStylingWith("looking good");
+        string afterXml = slidePart.Slide.InnerXml;
+
+        Assert.NotEqual(beforeXml, afterXml);
+
+        ppt.Close();
+    }
+
     [Fact]
     public void MultiSlideEdit_TextNotFound_NoChangeMade()
     {
