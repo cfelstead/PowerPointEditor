@@ -46,6 +46,10 @@ presentation.ForSlide(2)
             .FindPictureWithAltText("TeamLogo")
             .ReplaceImageWith("C:\MyTeamLogo.jpg");
 
+presentation.ForAllSlides()
+            .FindPictureWithAltText("TeamLogo")
+            .ReplaceImageWith("C:\MyTeamLogo.jpg");
+
 presentation.ForSlide(2)
             .FindPictureWithAltText("TeamLogo")
             .ReplaceAltTextWith($"FooBar United Team Logo");

@@ -122,4 +122,44 @@ public class PictureTests
         changablePpt.Close();
         File.Delete(destructiveReplacementPpt);
     }
+
+    [Fact]
+    public void Picture_ReplaceAllImages_Works()
+    {
+        string examplePpt = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                         "ppt-examples",
+                                         "test.pptx");
+        string originalAltText = "ReplaceAllImages";
+        string newImage = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                         "testing-assets",
+                                         "multi-color-fabric-texture-samples_1373-435.jpg");
+
+
+        string destructiveReplacementPpt = examplePpt.Replace("test.pptx", "test_replaceimage.pptx");
+        if (File.Exists(destructiveReplacementPpt)) File.Delete(destructiveReplacementPpt);
+        File.Copy(examplePpt, destructiveReplacementPpt);
+
+        var changablePpt = new PowerPointPresentation(destructiveReplacementPpt);
+
+        List<Picture> pictures = changablePpt.ForAllSlides().FindPictureWithAltText(originalAltText);
+        Picture picture = pictures[0];
+        string beforeXml = picture.InnerXml;
+        ImagePart beforeImagePart = picture.GetRelatedImagePart();
+        byte[] beforeImage = beforeImagePart.GetImageData();
+        
+        picture.ReplaceImageWith(newImage);
+
+        List<Picture> pictures2 = changablePpt.ForAllSlides().FindPictureWithAltText(originalAltText);
+        Picture picture2 = pictures2[0];
+        string afterXml = picture2.InnerXml;
+        ImagePart afterImagePart = picture.GetRelatedImagePart();
+        byte[] afterImage = afterImagePart.GetImageData();
+
+        Assert.Equal(beforeXml, afterXml);
+        Assert.Equal(beforeImagePart, afterImagePart);
+        Assert.NotEqual(beforeImage, afterImage); // This is the child element that will show the change
+
+        changablePpt.Close();
+        File.Delete(destructiveReplacementPpt);
+    }
 }

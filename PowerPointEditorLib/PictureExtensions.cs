@@ -7,17 +7,18 @@ public static class PictureExtensions
         List<Picture> output = new List<Picture>();
         foreach (SlidePart slidePart in slideParts)
         {
-            output.Add(FindPictureWithAltText(slidePart, altText));
+            Picture? picture = FindPictureWithAltText(slidePart, altText, true);
+            if (picture is not null) output.Add(picture);
         }
         return output;
     }
     
-    public static Picture FindPictureWithAltText(this SlidePart slidePart, string altText)
+    public static Picture? FindPictureWithAltText(this SlidePart slidePart, string altText, bool allowNotToPresent = false)
     {
         IEnumerable<Picture> pictures = slidePart.Slide.Descendants<Picture>();
         Picture? picture = pictures.Where(p => p.NonVisualPictureProperties?.GetFirstChild<NonVisualDrawingProperties>()?.Description == altText).FirstOrDefault();
 
-        if (picture is null)
+        if (picture is null && allowNotToPresent == false)
             throw new KeyNotFoundException($"Cannot find a picture in the slide with the alternate text specified ('{altText}')");
 
         return picture;
