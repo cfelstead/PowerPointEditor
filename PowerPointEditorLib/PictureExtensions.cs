@@ -2,6 +2,16 @@
 
 public static class PictureExtensions
 {
+    public static List<Picture> FindPictureWithAltText(this List<SlidePart> slideParts, string altText)
+    {
+        List<Picture> output = new List<Picture>();
+        foreach (SlidePart slidePart in slideParts)
+        {
+            output.Add(FindPictureWithAltText(slidePart, altText));
+        }
+        return output;
+    }
+    
     public static Picture FindPictureWithAltText(this SlidePart slidePart, string altText)
     {
         IEnumerable<Picture> pictures = slidePart.Slide.Descendants<Picture>();
@@ -21,6 +31,14 @@ public static class PictureExtensions
             throw new NullReferenceException("The holder for the alternate text could not be found");
 
         altTextHolder.Description = newAltText;
+    }
+
+    public static void ReplaceHyperlinkWith(this List<Picture> pictures, string newUrl)
+    {
+        foreach (Picture picture in pictures)
+        {
+            ReplaceHyperlinkWith(picture, newUrl);
+        }
     }
 
     public static void ReplaceHyperlinkWith(this Picture picture, string newUrl)
